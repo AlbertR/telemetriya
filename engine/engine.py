@@ -35,7 +35,7 @@ from struct import *
 from array import *
 import datetime as dt
 from struct import *
-from sqlalchemy import orm, schema, types, create_engine
+from sqlalchemy import orm, schema, types, create_engine, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -52,7 +52,8 @@ def now():
 
 def initdb(engine):
 
-    #connection = engine.connect()
+    connection = engine.connect()
+
 
     #queries = ('CREATE DATABASE IF NOT EXISTS _telemetriya',
     #           'USE _telemetriya')
@@ -62,6 +63,21 @@ def initdb(engine):
     #connection.execute('CREATE DATABASE IF NOT EXISTS _telemetriya')
     #connection.execute('USE _telemetriya')
 
+    #roles_users = Table('roles_users',
+    #        schema.Column('user_id', types.Integer, schema.ForeignKey('user.id')),
+    #        schema.Column('role_id', types.Integer, schema.ForeignKey('role.id')))
+    
+    class Roles_Users(Base):
+        __tablename__ = 'roles_users'
+        
+        user_id = schema.Column(types.Integer, schema.ForeignKey('user.id'))
+        role_id = schema.Column(types.Integer, schema.ForeignKey('role.id'))
+    
+    class Role(Base):
+        id = schema.Column(types.Integer(), primary_key=True)
+        name = schema.Column(types.String(80), unique=True)
+        description = schema.Column(types.String(255))
+    
     class TUser(Inspectable, Base):
         __tablename__ = 'user'
 
@@ -73,7 +89,7 @@ def initdb(engine):
         active = schema.Column(types.Boolean())
         confirmed_at = schema.Column(types.DateTime())
         user_info = schema.Column(types.Integer, schema.ForeignKey('user_info.id'))
-        # roles = relationship('Role', secondary=roles_users, backref=backref('users', lazy='dynamic'))
+        roles = relationship('Role', secondary=roles_users, backref=backref('users', lazy='dynamic'))
 
         def __init__(self, login, password, user_tag, user_phone, active, confirmed_at, user_info, roles):
             self.login = login
@@ -83,8 +99,40 @@ def initdb(engine):
             self.active = acitve
             self.confirmed_at = confirmed_at
             self.user_info = user_info
-        #    self.roles = roles
+            self.roles = roles
 
+    class UserInfo(Inspectable, Base):
+    
+        __tablename__ = 'user_info'
+    
+        __table_args__ = {
+            'mysql_charset':'utf8'
+        }
+    
+        id = schema.Column(types.Integer, schema.Sequence('user_id', optional=True), primary_key=True)
+        #user = db.Column(db.Integer, db.ForeignKey('user.id'))
+        user = relationship('User', uselist=False, backref='users_info', cascade_backrefs=True)
+        user_lname = schema.Column(types.Unicode(255), nullable=False, unique=False, default=u'')
+        user_fname = schema.Column(types.Unicode(255), nullable=False, unique=False, default=u'')
+        user_patronymic = schema.Column(types.Unicode(255), nullable=True, unique=False, default=u'')
+        user_nickname = schema.Column(types.Unicode(255), nullable=True, unique=True, default=u'')
+        #user_status = db.Column(db.Integer, db.ForeignKey('status.id'))
+        #user_status = db.Column(db.Integer)
+        #user_status = schema.Column(types.Integer, types.ForeignKey('status.id'))
+        user_why = schema.Column(types.Unicode(255), nullable=True, unique=False, default=u'')
+        #user_right = schema.Column(db.Integer)
+        mysql_charset='utf-8'
+    
+        def __init__ (self, user, user_lname, user_fname, user_patronymic, user_nickname, user_why):
+            self.user = user
+            self.user_lname = user_lname
+            self.user_fname = user_fname
+            self.user_patronymic = user_patronymic
+            self.user_nickname = user_nickname
+            #self.user_status = user_status
+            self.user_why = user_why
+    #        
+            
     class TBase(Inspectable, Base):
         __tablename__ = 'statistics'
         __table_args__ = {
@@ -95,7 +143,7 @@ def initdb(engine):
         date = schema.Column(types.DateTime(), default=now())
         label = schema.Column(types.Integer, default = 0)
         user_id = schema.Column(types.Integer, default = 0)
-        ringtime = schema.Column(types.Time, default = 0)
+        ringtime = schema.Column(types.Float, default = 0)
         track_id = schema.Column(types.Integer)
         session = schema.Column(types.Integer)
 
@@ -150,7 +198,7 @@ def initdb(engine):
             self.maxtime = maxtime
             self.active = active
 
-    #Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
 
     return TUser, TBase, TTrack
 
@@ -159,7 +207,7 @@ def fillDB(engine, TBase, date, label, ringtime):
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    baseData = TBase(date, label, ringtime)
+    baseData = TBase(date, label, 9, ringtime, 1, 1)
     session.add(baseData)
     session.commit()
 
@@ -207,7 +255,7 @@ def main():
 
     # Options to access the database
     #dbparam = 'mysql://root:ar1m2312@192.168.0.88:3306/_telemetriya?charset=utf8&use_unicode=1'
-    #dbparam = 'mysql://root:1234@127.0.0.1:3306/_telemetriya?charset=utf8&use_unicode=1'
+    #dbparam = 'mysql://root:1234@127.0.0.1:3306/telemetriya?charset=utf8&use_unicode=1'
     dbparam = 'mysql://root:30v11aiR@178.132.203.168:3306/_telemetriya?charset=utf8&use_unicode=1'
     engine = create_engine(dbparam, echo=False)
     TUser, TBase, TTrack = initdb(engine)
