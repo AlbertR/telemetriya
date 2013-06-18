@@ -1,0 +1,29 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+    <h1 class="font">РЕДАКТИРОВАТЬ МЕТКУ</h1>
+    {{ form.labelid(value=list.id) }}
+    {{ form.label_id(class="freezFld font el",value=list.label_id,style="text-align:right;",disabled=True)}}
+    {# {{ form.label_id(class="inptFld font")}} #}
+    <div class="selecterText"><span>Состояние<i>*</i></span>{{ form.status(default=list.status) }}</div>
+    <div class="height2"></div>
+    <div class="infoTextblack">ok &mdash; </div>
+    <div class="infoTextgray">Метка зарегистрирована и работает в штатном режиме.</div>
+    <div class="heightInfoText"></div>
+    <div class="infoTextblack">розыск &mdash; </div>
+    <div class="infoTextgray">Метка бесследно утеряна/украдена. При появлении такой метки среди зарегистрированных администратор будет уведомлен об этом.</div>
+    <div class="heightInfoText"></div>
+    <div class="infoTextblack">отключена &mdash; </div>
+    <div class="infoTextgray">Метка игнорируется системой: Не может быть зарегистрирована на тренировку. Если метка уже прошла регистрацию на текущую тренировку, при ее отключении данные с нее будут игнорироваться системой.</div>
+    <div class="height1"></div>
+    {{ form.btn_del(class="buttonDel") }}
+    {{ form.btn_ok(class="buttonOk") }}
+    {{ form.btn_cancel(class="buttonCancel") }}
+    </div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

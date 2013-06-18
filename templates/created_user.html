@@ -1,0 +1,26 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+	<div class="labelText  titleText">Регистрация нового пользователя:</div>
+	<div class="labelText">{{ "%s [%s] %s" % (list.user_fname,list.user_nickname, list.user_lname) }}</div>
+	<div class="infoText">Вы успешно зарегистрироваы<br />Ваш ID:</div>
+	{{ form.user_tag(class="freezFld", value=list.user.user_tag, style="text-align: center;") }}
+	<div class="infoText">Приведенный ниже штрих-код позволит Вам быстрее
+авторизоваться в системе. Сохраните его на свое мобильное устройство. Вместо
+введения номера телефона или ID пользователя вы можете подносить его изображение
+к камере.</div>
+	<div><img src='../static/img/code39.png' width=430 /></div>
+	<div class="infoText">Письмо с Вашими данными и штрих-кодом направлено на
+указанный Вами ящик.<br /><br />Хорошей тренировки</div>
+
+
+    {{ form.btn_ok(class="buttonOk") }}
+<div class="clearfix"></div>
+</div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

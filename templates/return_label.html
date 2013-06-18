@@ -1,0 +1,51 @@
+{% include "head.html" %}
+<body>
+{% include "header_login.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContentLabel">
+    <div class="fl">
+      <h1 class="font">Пользователь:</h1>
+    </div>
+    {% if g.anonymous==1 %}
+       <div class="fl font userInfor">АВТОРИЗУЙТЕСЬ</div>
+            <div class="topTop">
+	      {% if g.user_unexists %}
+                  {{ form.user_phone(class="inptFldr font") }}
+	      {% else %}
+                  {{ form.user_phone(class="inptFld font", value="") }}
+	      {% endif %}
+	      {{ form.btn_user_ok(class="submit")}}
+	      {% if g.user_unexists %}
+	      <div class="errorText">Пользователь с таким телефоном или ID не найден.<br/>
+                 Попробуйте еще раз.
+	      </div>
+	      {% endif %}
+       </div>
+    {% else %}
+       <div class="fl font userInfo">{{ user_info.user_fname}}&nbsp;{{ user_info.user_nickname }}&nbsp;{{ user_info.user_lname }}</div>
+    {% endif %}
+    {{ g.label_id }}
+    {% if g.label_id == "None" %}
+       <div class="errorText">Метки с таким номером не существует</div>
+    {% elif g.label_id == 0 %}
+       <div class="errorText">Метка с таким номером уже сдана</div>
+    {% endif %}
+    <div class="labelInfo">Поднесите метку к камере для считывания номера или введите номер вручную:</div>
+    <div class="titleText"><img src="{{ url_for('static', filename='img/label_create.jpg')}}" /></div>
+    <div class="topTop">
+    {% if g.anonymous==1 %}
+       {{ form.label_id(class="inptFld font",disabled="true") }}
+       {{ form.btn_ok(class="buttonDisable",disabled="true") }}
+    {% else %}
+       {{ form.label_id(class="inptFld font") }}
+       {{ form.btn_ok(class="buttonOk") }}
+    {% endif %}
+    </div>
+    <div class="height1"></div>
+    {{ form.btn_cancel(class="buttonCancel") }}
+    </div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

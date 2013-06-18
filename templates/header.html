@@ -1,0 +1,56 @@
+<div class="header_info">
+	<div class="center">
+
+        <a href="/" class="logo_info fl">&nbsp;</a>
+
+        <div class="sideTwo fl">
+            <div class="headine">{{ track }}</div>
+            <div>сессия:<span class="num">{{ g.session }}</span></div>
+        </div>
+
+        <div class="sideThree fl">
+            <div class="descr">воздух:</div>
+            <div class="descr">асфальт:</div>
+            <div class="descr">отн. влажн.:</div>
+        </div>
+
+        <div class="sideFour fl">
+            <div class="descr">
+	      {% if weather!=None %}
+	          {{ g.temperature[weather.temperature][1] }} °C
+	      {% else %}
+	          Тренировка не создана
+	      {% endif %}
+	    </div>
+            <div class="descr">
+	      {% if weather!=None %}
+	          {{ g.tcoating[weather.tcoating][1] }} °C
+	      {% endif %}
+	    </div>
+            <div class="descr">
+	      {% if weather!=None %}
+	          {{ g.relative_humidity[weather.relative_humidity][1] }} %
+	      {% endif %}
+	    </div>
+        </div>
+
+        <div class="sideFive fl">
+            <div>
+	      {% if weather!=None %}
+	          {{ g.cloud[weather.cloudiness][1] }}
+	      {% endif %}
+	    </div>
+            <div>
+	      {% if weather!=None %}
+	          {{ g.coverage[weather.ccoverage][1] }}
+	      {% endif %}
+	    </div>
+        </div>
+
+        <div class="rightSide">
+            <div id="place" class="date font">15 МАЙ 2013</div>
+            <div id="time" class="clock font">19:29<span>:41</span></div>
+        </div>
+        <a class="sticker" href="/admin">В меню</a>
+	</div>
+</div>

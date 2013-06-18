@@ -1,0 +1,39 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+	<div class="labelText  titleText">Регистрация нового пользователя:</div>
+	{% if g.validator_not_passed: %}
+	    <div class="errorText">Неправильно введены данные:</div>
+	{% endif %}
+	<div class="labelText">Фамилия<i>*</i>:</div>
+	{{ form.lastname(class="inptFld font",value="Фамилия",onblur="if(this.value=='') this.value='Фамилия';",onfocus="if(this.value=='Фамилия') this.value='';") }}
+
+	<div class="labelText">Имя<i>*</i>:</div>
+	{{ form.firstname(class="inptFld font",value="Имя",onblur="if(this.value=='') this.value='Имя';",onfocus="if(this.value=='Имя') this.value='';") }}
+
+	<div class="labelText">Отчество:</div>
+	{{ form.patronymic(class="inptFld font",value="Отчество",onblur="if(this.value=='') this.value='Отчество';",onfocus="if(this.value=='Отчество') this.value='';") }}
+
+	<div class="labelText">Псевдоним:</div>
+	{{ form.nickname(class="inptFld font",value="Никнейм",onblur="if(this.value=='') this.value='Никнейм';",onfocus="if(this.value=='Никнейм') this.value='';") }}
+
+	<div class="labelText">Мобильный телефон:<i>*</i><font class='font small'>образец +7 000 0000000</font></div>
+	{{ form.phone(class="inptFld font") }}
+
+	<div class="labelText">e-mail:<i>*</i></div>
+	{{ form.email(class="inptFld font") }}
+
+	<!-- <div class="infoText">{{ form.agree }}Я согласен с условиями регистрации</div> -->
+
+
+    {{ form.btn_ok(class="buttonOk") }}
+    {{ form.btn_cancel(class="buttonCancel") }}
+<div class="clearfix"></div>
+</div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

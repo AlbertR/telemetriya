@@ -1,0 +1,22 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<div class="centerContent">
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+    {{ form.b_drop.label }} {{ form.b_drop }}
+    {{ form.btn_create.label }} {{ form.btn_create(size=20) }}
+    {{ form.btn_begin_track(class="buttonOk") }}
+    {{ form.btn_track_controll(class="buttonAll") }}
+    {{ form.btn_label_controll(class="buttonAll") }}
+    {{ form.btn_user_controll(class="buttonAll") }}
+    <div class="clearfix"></div>
+    <div class="height"></div>
+    {{ form.btn_admin_controll(class="buttonYellow") }}
+</div>
+</form>
+</div>
+</body>
+{% include "foot.html" %}
+</html>

@@ -1,0 +1,20 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+  {{ form.csrf_token }}
+<div class="centerContent">
+	<div class="labelText  titleText">Управление треками:</div>
+	{{ form.create_track(class="buttonAll") }}
+	<div class="infoText">Для изменения параметров одной из существующих треков - выберите его из списка:`</div>
+	{% for item in list %}
+	<div class="listText"> {{ item.id }} <a href="{{ url_for('static', filename='../track_edit/%s' % item.id) }}">{{item.name}}</a> </div>
+	{% endfor %}
+	<div class="height"></div>
+	{{ form.back_to_menu(class="buttonCancel") }}
+<div class="clearfix"></div>    
+</form>
+</div>
+</body>
+{% include "foot.html" %}
+</html>

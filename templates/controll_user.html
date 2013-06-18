@@ -1,0 +1,21 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" encrypt="multipart/form-data" action="">
+  {{ form.csrf_token }}
+<div class="centerContent">
+	<div class="labelText  titleText">Управление пользователями</div>
+	{{ form.create_user(class="buttonAll") }}
+	<div class="infoText">Для изменения параметров зарегистрированного ранее пользователя - выберите его из списка:`</div>
+	{% set i = 1 %}
+	{% for item in list %}
+	<div class="listText"><div style="float:left;"> {{ i }} <a href="{{ url_for('static', filename='../edit_user/%s' % item.id) }}">{{ item.user.user_tag}} {{item.user_fname}}     {{ item.user_nickname }}   {{ item.user_lname }} </a></div><div style="text-align: right;">{{ g.ustatus[item.user_status][1] }}</div>
+	</div>
+	{% set i=i+1 %}
+	{% endfor %}
+	{{ form.back_to_menu(class="buttonAll") }}
+<div class="clearfix"></div>
+</div>
+</body>
+{% include "foot.html" %}
+</html>

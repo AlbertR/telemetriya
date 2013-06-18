@@ -1,0 +1,100 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+  {{ form.csrf_token }}
+  {{ form.trackid(value="%s" % list.id) }}
+  <div class="centerContent">
+	<div class="labelText  titleText">Редактировать трек:</div>
+	<div class="labelText">Название<i>*</i>:</div>
+	{{ form.trackname(class="inptFld font",value="%s" % list.name,onblur="if(this.value=='') this.value='Название';",onfocus="if(this.value=='Название') this.value='';") }}
+
+    <!--<input type="text" class="inptFld font" value="Автодром “Laguna Seca” [USA]" />-->
+
+	<div class="labelText">Протяженность (в метрах):</div>
+    <!-- <input type="text" class="inptFld font" value="1153" /> -->
+        {{ form.length(class="inptFld font",value="%s" % list.length,onblur="if(this.value=='') this.value='Протяженность';",onfocus="if(this.value=='Протяженность') this.value='';") }}
+	<div class="labelText">Адрес (Страна, Город, Улица, Дом):</div>
+    <!-- <input type="text" class="inptFld font" value=" " />  -->
+        {{ form.country(class="inptFld font",value="%s" % list.address,onblur="if(this.value=='') this.value='Адрес';",onfocus="if(this.value=='Адрес') this.value='';") }}
+
+	<div class="labelText">Координаты GPS:</div>
+    <!-- <input type="text" class="inptFld font" value="36.584296, -121.753471"/> -->
+        {{ form.gps(class="inptFld font",value="%s" % list.gps,onblur="if(this.value=='') this.value='Координаты (через запятую)';",onfocus="if(this.value=='Координаты (через запятую') this.value='';") }}
+
+    <div class="section">
+
+    	<div class="sectionLeft">
+            <div class="labelText">
+                    Минимальное время<i>*</i>:
+            </div>
+            (mm:cc)
+            <!-- <input type="text" class="inptFld font small" value="00:45"/> -->
+	    {{ form.mintime(class="inptFld font small",value="%s" % list.mintime,onblur="if(this.value=='') this.value='00:00:00';",onfocus="if(this.value=='00:00:00') this.value='';") }}
+            <div class="centerCheckbox">
+            	<!-- <input type="checkbox" checked="checked" /><span>Трек активен.</span> -->
+	     {{ form.active }}<span>Трек активен.</span>
+            </div>
+        </div>
+
+    	<div class="sectionRight">
+            <div class="labelText">
+                    Максимальное время<i>*</i>:
+            </div>
+            (mm:cc)
+            <!-- <input type="text" class="inptFld font small" value="01:45"/>                                 -->
+	    {{ form.maxtime(class="inptFld font small",value="%s" % list.maxtime,onblur="if(this.value=='') this.value='00:00:00';",onfocus="if(this.value=='00:00:00') this.value='';") }}
+        </div>
+
+    </div>
+
+	<div class="centerText">
+        Если трек не активен, он не будет доступен для выбора
+	    в списке треков в начале тренировки.
+    </div>
+
+    <!-- <a class="buttonOk" href="#">Применить</a> -->
+    <!-- <a class="buttonCancel" href="#">Отменить</a> -->
+    {{ form.btn_update(class="buttonOk") }}
+    {{ form.back_to_menu(class="buttonCancel") }}
+<div class="clearfix"></div>
+</form>
+</div>
+</body>
+<script type="text/javascript">
+    var month=new Array("января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
+    var current_date = new Date();
+    day=current_date.getDate();
+    m=month[current_date.getMonth()]
+    y=current_date.getFullYear();
+    $("#place").text(day+" "+m+" "+y);
+</script>
+<script type="text/javascript">
+window.onload = function(){
+    (function(){
+        var date = new Date()
+        div = document.getElementById("time");
+        if (date.getHours()<=9) {
+		h="0"+date.getHours();
+	} else {
+		h=date.getHours();
+	};
+        if (date.getMinutes()<=9) {
+                m="0"+date.getMinutes();
+        } else {
+                m=date.getMinutes();
+        };
+        if (date.getSeconds()<=9) {
+                s="0"+date.getSeconds();
+        } else {
+                s=date.getSeconds();
+        };
+        div.innerHTML = h+":"+m+"<span>:"+s+"</span>";
+	//$("#time").text(h+":"+m);
+	window.setTimeout(arguments.callee, 1);
+	Cufon.replace('.font, .labelText', { fontFamily: 'font_47lc', hover : true });
+	Cufon.now();
+    })();
+};
+</script>
+</html>

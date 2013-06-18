@@ -1,0 +1,41 @@
+{% include "head.html" %}
+<body>
+{% include "header_login.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContentLabel">
+    <div class="fl">
+      <h1 class="font">Пользователь:</h1>
+    </div>
+    <div class="fl font userInfo">{{ user_info.user_fname}}&nbsp;{{ user_info.user_nickname }}&nbsp;{{ user_info.user_lname }}</div>
+    <div class="labelInfo">Поднесите метку к камере для считывания номера или введите номер вручную:</div>
+    <div class="titleText"><img src="{{ url_for('static', filename='img/label_create.jpg')}}" /></div>
+    <div class="topTop">
+    {% if g.label_mounted or g.user_has_label %}
+        {% if request.form.getlist('label_id')!='' %}
+           {{ form.label_id(class="fl inptFldr font",value="%s" % request.form.getlist('label_id')[0],onblur="if(this.value=='') this.value='000.000.000';",onfocus="if(this.value=='000.000.000') this.value='';", style="text-align:right;", maxlength="11", onkeyup="this.value=this.value.replace(/(\D\.)/, '')")}}
+        {% else %}
+           {{ form.label_id(class="fl inptFldr font",value="000.000.000",onblur="if(this.value=='') this.value='000.000.000';",onfocus="if(this.value=='000.000.000') this.value='';", style="text-align:right;", maxlength="11", onkeyup="this.value=this.value.replace(/(\D\.)/, '')")}}
+        {% endif %}
+    {% else %}
+        {{ form.label_id(class="fl inptFld font",value="000.000.000",onblur="if(this.value=='') this.value='000.000.000';",onfocus="if(this.value=='000.000.000') this.value='';", style="text-align:right;", maxlength="11", onkeyup="this.value=this.value.replace(/(\D\.)/, '')")}}
+    {% endif %}
+    {{ form.btn_ok(class="fl submit") }}
+    </div>
+    {% if g.label_mounted %}
+	<div class="errorText">Метка с таким номером уже зарегистрирована.<br/>
+          Попробуйте еще раз.
+	</div>
+    {% endif %}
+    {% if g.user_has_label %}
+	<div class="errorText">Вы не сдали предыдущую метку.<br/>
+          Попробуйте позднее.
+	</div>
+    {% endif %}
+    <div class="height1"></div>
+    {{ form.btn_cancel(class="buttonCancel") }}
+    </div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

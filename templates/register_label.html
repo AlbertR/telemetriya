@@ -1,0 +1,32 @@
+{% include "head.html" %}
+<body>
+{% include "header_login.html" %}
+<form method="POST" encrypt="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="center">
+	<h2 class="font"><span>Для регистрации введите <br/>
+номер телефона или персональный ID:</span></h2>
+  	<div class="middle">
+                <div class="topTop">
+		    {% if g.user_unexists %}
+                        {{ form.user_phone(class="inptFldr font") }}
+		    {% else %}
+                        {{ form.user_phone(class="inptFld font", value="") }}
+		    {% endif %}
+		    {{ form.btn_ok(class="submit")}}
+		    {% if g.user_unexists %}
+		        <div class="errorText">Пользователь с таким телефоном или ID не найден.<br/>
+                        Попробуйте еще раз.
+			</div>
+		    {% endif %}
+                </div>
+		{{ form.btn_register(class="buttonOk font", value="РЕГИСТРАЦИЯ НОВОГО ПОЛЬЗОВАТЕЛЯ") }}
+		{{ form.btn_return(class="buttonOk font", value="ВОЗВРАТ МЕТКИ") }}
+          <br clear="all" />
+        </div>
+     </div>
+
+</form>
+</body>
+{% include "foot.html" %}
+</html>

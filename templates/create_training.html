@@ -1,0 +1,28 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+    <h1 class="font">НАЧАТЬ ТРЕНИРОВКУ</h1>
+    <div class="trainingInfo">Пожалуйста укажите текущие значения следующих параметров:</div>
+    <div class="selecterText"><span>Температура воздуха (C)</span>{{ form.temperature }}</div>
+    <div class="selecterText"><span>Относительная влажность (%)</span>{{ form.relative_humidity }}</div>
+    <div class="selecterText"><span>Облачность</span>{{ form.cloudiness }}</div>
+    <div class="selecterText"><span>Осадки</span>{{ form.precipitation }}</div>
+    <div class="selecterText"><span>Температура покрытия</span>{{ form.tcoating }}</div>
+    <div class="selecterText"><span>Состояние покрытия</span>{{ form.ccoverage }}</div>
+    <!--<div class="sectionLeft">
+    <div class="labelText">Окончание тренировки:</div> -->
+   {#  {{ form.stop(class="inptFld font small", value="00:00:00",onblur="if(this.value=='') this.value='00:00:00';",onfocus="if(this.value=='00:00:00') this.value='';")}} #}
+    <!-- </div> -->
+    <div class="height"></div>
+    <div class="trainingInfo">Укажите место проведения тренировки:</div>
+    <div class="selecterText"><span>Трасса<i>*</i></span>{{ form.track }}</div>
+    {{ form.btn_ok(class="buttonOk") }}
+    {{ form.btn_cancel(class="buttonCancel") }}
+    </div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

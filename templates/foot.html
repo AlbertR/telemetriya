@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    var month=new Array("января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря");
+    var current_date = new Date();
+    day=current_date.getDate();
+    m=month[current_date.getMonth()]
+    y=current_date.getFullYear();
+    $('#place').text(day+" "+m+" "+y);
+</script>
+<script type="text/javascript">
+window.onload = function(){
+    (function(){
+        var date = new Date()
+        div = document.getElementById("time");
+        if (date.getHours()<=9) {
+		h="0"+date.getHours();
+	} else {
+		h=date.getHours();
+	};
+        if (date.getMinutes()<=9) {
+                m="0"+date.getMinutes();
+        } else {
+                m=date.getMinutes();
+        };
+        if (date.getSeconds()<=9) {
+                s="0"+date.getSeconds();
+        } else {
+                s=date.getSeconds();
+        };
+        div.innerHTML = h+":"+m+"<span>:"+s+"</span>";
+	//$("#time").text(h+":"+m);
+	window.setTimeout(arguments.callee, 1);
+	Cufon.replace('.font, .labelText, .infoText, .listText', { fontFamily: 'font_47lc', hover : true });
+	Cufon.replace('.whiteShadow', { fontFamily: 'font_57c', hover: true, textShadow: '1.5px 1.5px #FFFFFF;' })
+	//Cufon.replace('.userInfo', { fontFamily: 'font_57c', hover: true })
+	Cufon.now();
+    })();
+};
+</script>
+<script>
+$('#label_id').bind('textchange', function(){
+        input_val = $(this).val();
+        clear_val = input_val.replace(/(\.)/g,'');
+        console.log(clear_val);
+        clear_val = clear_val.replace(/[A-Za-zА-Яа-я]/g,'');
+        console.log(clear_val);
+        fval=clear_val.replace(/(\d)(?=(\d\d\d)+([^\d]|$))|$/g, '$1.');
+        console.log(fval);
+        $(this).val(fval.substring(0,fval.length-1));
+});
+{% if list %}
+{% if list.status %}
+$('#status').val('{{ list.status }}')
+{% elif list.user_status  %}
+$('#status').val('{{ list.user_status }}')
+{% endif %}
+{% endif %}
+</script>

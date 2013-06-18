@@ -1,0 +1,20 @@
+{% include "head.html" %}
+<body>
+{% include "header.html" %}
+<form method="POST" enctype="multipart/form-data" action="">
+    {{ form.csrf_token }}
+    <div class="centerContent">
+    <h1 class="font">СОЗДАТЬ НОВУЮ МЕТКУ</h1>
+    <div class="labelInfo">Поднесите метку к камере для считывания номера или введите номер вручную:</div>
+    <div class="titleText"><img src="{{ url_for('static', filename='img/label_create.jpg')}}" /></div>
+    {{ form.label_id(class="inptFld font",value="000.000.000",onblur="if(this.value=='') this.value='000.000.000';",onfocus="if(this.value=='000.000.000') this.value='';", style="text-align:right;", maxlength="11", onkeyup="this.value=this.value.replace(/(\D\.)/, '')")}}
+    {# {{ form.label_id(class="inptFld font")}} #}
+    <div class="selecterText"><span>Состояние<i>*</i></span>{{ form.status }}</div>
+    <div class="height1"></div>
+    {{ form.btn_ok(class="buttonOk") }}
+    {{ form.btn_cancel(class="buttonCancel") }}
+    </div>
+</form>
+</body>
+{% include "foot.html" %}
+</html>

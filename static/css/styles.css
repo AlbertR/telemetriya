@@ -1,0 +1,97 @@
+html,body{ margin:0; padding:0; width:100%; height:100%; border:0; font-family:Tahoma, Geneva, sans-serif;  }
+.header {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; line-height:75px; font-size:36px; }
+.header_info {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; font-size:14px; }
+/* .header_login {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; line-height:75px; font-size:36px; } */
+.center{ width:760px; margin:auto; position:relative;}
+.center_rlabel{ width:760px; margin:auto;}
+.center_info {width: 760px; margin: auto;}
+.font{ line-height:0;}
+
+.leftSide{ width:124px; float:left;}
+.middleSide{width:500px; float:left;}
+.rightSide{width:136px; float:right;}
+
+/* .hide{ display:none; } */
+.fl{ float:left;}
+.fr{ float:right;}
+.clearfix{ clear:both;}
+
+.logo{ display:block; width:99px; height:124px; background:url('../img/osaSprite.png') 0 0 no-repeat; position:relative; text-decoration:none; top: 7px;}
+.logo_info{display:block; width:84px; height:70px; background:url('../img/osaSprite.png') -104px 0 no-repeat; position:relative; text-decoration:none; top: 4px;}
+h1 { margin:0; padding-top:33px; font-size:39px; line-height:0;}
+/* h2 {text-align:left; margin:0; padding: 75px 0px 37px 203px; font-size: 46px; display:block;} */
+/* h2 span{text-align:left; margin:0; padding: 30px 0px 20px 126px; font-size: 24px; display:block; line-height: 27px;} */
+h2 .font{text-align:left; margin:0; padding: 30px 0px 20px 126px; font-size: 24px; display:block; line-height: 27px;}
+
+.sideTwo{ width:250px;}
+.headine{ font-size:22px; font-family:Tahoma, Geneva, sans-serif; padding: 3px 0 5px 0;}
+.sideTwo div span{ font-size:24px; margin:0 2px }
+.sideThree{ width:85px; padding-top:13px;}
+.sideThree .descr{ text-align:right; width:100%;}
+
+.sideFour{ width:62px;padding-top:13px;}
+.sideFour .descr{ text-align:left; padding-left:10px;}
+.sideFive{ width:135px; padding-top:13px;}
+.sideFive div{ text-align:center;}
+
+.rightSide{width:136px; float:right;}
+.date{ font-size:22px; padding-top:4px;  }
+.clock{ font-size:39px; padding-top:7px;}
+.clock span{ font-size:26px;}
+
+/* .grey {width:100%; height:400px; background-image:url('../img/grey.jpg'); background-repeat:repeat-x;} */
+.whiteShadow{text-shadow: 2px 2px #FFFFFF;}
+.middle{width:506px; margin:auto;}
+/* .middle input{float:left;} */
+.sticker{ display:block; position:absolute; right:0; bottom:-112px;  width:145px; height:26px; background: url('../img/osaSprite.png') -104px -75px no-repeat; color:#00aeff; padding:12px 0 0 27px;}
+
+.topTop{ height:111px; }
+
+.topTop .inptFld{ background:url('../img/osaSprite.png') -2893px -10px no-repeat; }
+.topTop .clear{ display:none;}
+.topTop .inptFldr{  background:url('../img/osaSprite.png') -2023px -10px no-repeat; }
+.err .clear{ display:block;}
+
+.centerContent{ width:430px; margin:auto; padding: 30px 90px 0 0;}
+.centerContentLabel{ width:520px; margin:auto; padding: 30px 90px 0 0;}
+.labelText{ font-size:22px; min-height:25px; }
+.labelText i{ color: #ff0000; font-style:normal;}
+.errorText{ font-size:16px; min-height:25px; color: red;clear: left;}
+.titleText{ margin-bottom:10px;}
+
+.infoText{ font-size:18px; min-height:21px; }
+.infoTextblack{ font-size:14px; min-height:25px; float: left; text-align: right; width: 200px; margin: 0 10px 0 0;}
+.infoTextgray{ font-size:14px; min-height:25px; color: gray; width: 220px; float: right; }
+.listText{padding-bottom: 5px; margin: 10px 0 5px 10px; font-size: 16px; border-bottom: 1px solid lightgray;}
+.listText span{ text-align: right; clear: left; }
+.inptFld{ width:418px; height:60px; border:0;background: url('../img/osaSprite.png') -2893px -10px no-repeat; text-align: left; margin: 0px 16px 5px 0px; float: left; padding-left:12px; font-size:37px; outline:none;}
+.inptFldr{ width:418px; height:60px; border:0; text-align: left; margin: 0px 16px 5px 0px; float: left; padding-left:12px; font-size:37px; outline:none;}
+/* .inptFldlogin{ width:430px; height:60px; background:url('../img/osaSprite.png') -2893px -10px no-repeat; display:block; border:0; margin-right:16px; padding:0; float:left; text-align:center; font-size:55px; outline:none;} */
+.freezFld{ width:425px; height:60px; background:url('../img/osaSprite.png') -3328px -10px no-repeat; display:block; border:0; margin:0; padding:0 0 15px 0; text-align:left; font-size:30px; outline:none; padding-left: 5px;}
+/* .el{ margin: 10px 0 0 0; } */
+.height{ height: 300px;}
+/* .height1{ height: 50px; clear: both;} */
+/* .height2{ height: 25px; clear: both;} */
+/* .heightInfoText{ height: 10px; clear: both;} */
+.userInfo{padding: 45px 0 0 10px; text-align:bottom; font-size:24px; color: #00aeff;}
+.userInfor{padding: 45px 0 0 10px; text-align:bottom; font-size:24px; color: #ff0000;}
+.sectionRight{ float:right; width:50%;}
+.sectionLeft{ float:left; width:50%;}
+.inptFld.small{ width:185px; height:60px; background:url('../img/osaSprite.png') -4120px -10px no-repeat; display:block; border:0; margin:0; text-align:left; font-size:30px; outline:none; margin: 6px 0 0 0; padding: 0 0 5px 5px; float: bottom; }
+.inptFldtr{ width:185px; height:60px; background:url('../img/osaSprite.png') -4120px -10px no-repeat; display:block; border:0; margin:0; text-align:left; font-size:30px; outline:none; margin: 6px 0 0 0; padding: 0 0 5px 5px;  }
+.small{text-align:left; color: darkgray; font-size:20px;}
+.centerText{ font-size:14px; text-align:center; clear:both; padding:20px 0 30px 0;}
+.selecterText {clear:right;float:right; padding: 10px 0 0 0;}
+.selecterText select{width: 220px;}
+.selecterText option{float: right;}
+.selecterText span{ color: gray; font-size:14px; text-align:left; clear:left; padding:20px 10px 30px 0;}
+.selecterText span i{color:#FF0000; font-style: normal; }
+.trainingInfo, .labelInfo { font-size:14px; text-align:left; clear:left; padding:20px 20px 5px 0;}
+.centerCheckbox{ width: 100%;margin: auto;text-align: center;padding-top: 13px;font-size: 14px; float: left;}
+.submit{background: url('../img/osaSprite.png') -3765px -10px no-repeat; width: 60px; height: 60px; float: left; border:0; padding: 0; cursor: pointer;}
+.buttonOk{width: 430px; height:60px; display:block; background:url('../img/osaSprite.png') -283px -10px no-repeat; border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 0; cursor: pointer; line-height:60px; }
+.buttonCancel{background:url('../img/osaSprite.png')  -2023px -10px no-repeat; width: 430px; height:60px; display:block;  border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 0; cursor: pointer; line-height:60px; }
+.buttonDisable{background:url('../img/osaSprite.png')  -2458px -10px no-repeat; width: 430px; height:60px; display:block;  border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 0; cursor: pointer; line-height:60px; }
+.buttonAll{background:url('../img/osaSprite.png')  -718px -10px no-repeat; width: 430px; height:60px; display:block;  border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 0; cursor: pointer; line-height:60px; }
+.buttonYellow{background:url('../img/osaSprite.png')  -1153px -10px no-repeat; width: 430px; height:60px; display:block;  border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 0; cursor: pointer; line-height:60px;}
+.buttonDel{width: 290px; height:60px; display:block; background:url('../img/osaSprite.png') -3825px -10px no-repeat; border:0; text-align:center; font-size:24px; outline:none; float:left; color:#FFF; text-decoration:none; margin: 0 0 20px 140px; cursor: pointer; line-height:60px; }
