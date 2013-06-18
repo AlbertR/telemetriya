@@ -10,14 +10,14 @@ def check(requires):
     '''
     import warnings
     import pkg_resources as pkgr
-    
+
     #Checking to intall SQLAlchemy module
     try:
         pkgr.require(requires[0])
     except pkgr.DistributionNotFound:
         warnings.warn('Install SQLAlchemy')
         sys.exit(0)
-    
+
     #Checkin to intall PySerial module
     try:
         pkgr.require(requires[1])
@@ -36,105 +36,129 @@ from array import *
 import datetime as dt
 from struct import *
 from sqlalchemy import orm, schema, types, create_engine
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
 class Inspectable(object):
-    
+
     def __repr__(self):
         return '<%s: %s>' % (self.__class__.__name__, dict([(x,y) for (x,y) in self.__dict__.items() if not x.startswith('_')]))
 
 def now():
     return dt.datetime.now()
 
-def createdb(engine):
+def initdb(engine):
 
-    connection = engine.connect()
+    #connection = engine.connect()
 
     #queries = ('CREATE DATABASE IF NOT EXISTS _telemetriya',
     #           'USE _telemetriya')
     #queries = ('USE _telemetriya')
-    
+
     #map(connection.execute, queries)
     #connection.execute('CREATE DATABASE IF NOT EXISTS _telemetriya')
     #connection.execute('USE _telemetriya')
-    
+
     class TUser(Inspectable, Base):
         __tablename__ = 'user'
 
         id = schema.Column(types.Integer, schema.Sequence('user_id', optional=True), primary_key=True)
         login = schema.Column(types.Unicode(255), nullable=False, unique=True, default=u'')
-        password = schema.Column(types.Unicode(255), nullable=False, default=u'')
-        nick = schema.Column(types.Unicode(255), nullable=False, default=u'')
-        phone = schema.Column(types.Unicode(255), default=u'')
-        fio = schema.Column(types.Unicode(255), nullable=True, default=u'')
+        password = schema.Column(types.String(255))
+        user_tag = schema.Column(types.Unicode(255), nullable=True, unique=False, default=u'')
+        user_phone = schema.Column(types.Unicode(255), nullable=False, unique=True, default=u'')
+        active = schema.Column(types.Boolean())
+        confirmed_at = schema.Column(types.DateTime())
+        user_info = schema.Column(types.Integer, schema.ForeignKey('user_info.id'))
+        # roles = relationship('Role', secondary=roles_users, backref=backref('users', lazy='dynamic'))
 
-        def __init__(self, login, password, nick, phone, fio):
+        def __init__(self, login, password, user_tag, user_phone, active, confirmed_at, user_info, roles):
             self.login = login
             self.password = password
-            self.phone = phone
-            self.nick = nick
-            self.fio = fio
+            self.user_tag = user_tag
+            self.user_phone = user_phone
+            self.active = acitve
+            self.confirmed_at = confirmed_at
+            self.user_info = user_info
+        #    self.roles = roles
 
     class TBase(Inspectable, Base):
-        __tablename__ = 'telemetriya'
+        __tablename__ = 'statistics'
+        __table_args__ = {
+            "mysql_charset":"utf8"
+        }
 
-        id = schema.Column(types.Integer, schema.Sequence('telemetr_id', optional=True), primary_key=True)
-        date = schema.Column(types.DateTime(), nullable=False, default=now())
-        label = schema.Column(types.Integer, nullable=False)
-        ringtime = schema.Column(types.Float, nullable=False)
+        id = schema.Column(types.Integer, schema.Sequence('statistics_id', optional=True), primary_key=True)
+        date = schema.Column(types.DateTime(), default=now())
+        label = schema.Column(types.Integer, default = 0)
+        user_id = schema.Column(types.Integer, default = 0)
+        ringtime = schema.Column(types.Time, default = 0)
+        track_id = schema.Column(types.Integer)
+        session = schema.Column(types.Integer)
 
-        def __init__(self, date, label, ringtime):
+        def __init__(self, date, label, user_id, ringtime, track_id, session):
             self.date = date
             self.label = label
+            self.user_id = user_id
             self.ringtime = ringtime
+            self.track_id = track_id
+            self.session = session
 
-    class TLabel(Inspectable, Base):
-        __tablename__ = 'labels'
+    # class TLabel(Inspectable, Base):
+    #     __tablename__ = 'labels'
 
-        id = schema.Column(types.Integer, schema.Sequence('label_id', optional=True), primary_key=True)
-        status = schema.Column(types.Unicode(255), nullable=True, default=u'')
-        
-        def __init__(self, status):
-            self.status = status
-        
-    class TLabelStatus(Inspectable, Base):
-        __tablename__ = 'lstatus'
-        
-        id = schema.Column(types.INTEGER, schema.Sequence('lstatus_id', optional=True), primary_key=True)
-        name = schema.Column(types.Unicode(255), nullable=False, default=u'')
-        
-        def __init__(self, name):
-            self.name = name
-        
-    
+    #     id = schema.Column(types.Integer, schema.Sequence('label_id', optional=True), primary_key=True)
+    #     status = schema.Column(types.Unicode(255), nullable=True, default=u'')
+
+    #     def __init__(self, status):
+    #         self.status = status
+
+    # class TLabelStatus(Inspectable, Base):
+    #     __tablename__ = 'lstatus'
+
+    #     id = schema.Column(types.INTEGER, schema.Sequence('lstatus_id', optional=True), primary_key=True)
+    #     name = schema.Column(types.Unicode(255), nullable=False, default=u'')
+
+    #     def __init__(self, name):
+    #         self.name = name
+
+
     class TTrack(Inspectable, Base):
         __tablename__ = 'track'
-    
-        id = schema.Column(types.Integer, schema.Sequence('track_id', optional=True), primary_key=True)
-        name = schema.Column(types.Unicode(255), nullable=False, default=u'')
-        lenght = schema.Column(types.Integer, nullable=False)
-        #gps =
-        mintime = schema.Column(types.Float, nullable=False)
-        maxtime = schema.Column(types.Float, nullable=False)
+        __table_args__ = {
+            'mysql_charset':'utf8'
+        }
 
-        def __init__(self, name, lenght, mintime, maxtime):
+        id = schema.Column(types.Integer, schema.Sequence('track_id', optional=True), primary_key=True)
+        name = schema.Column(types.Unicode(255), nullable=False, unique=False, default=u'')
+        lenght = schema.Column(types.Integer)
+        address = schema.Column(types.Unicode(255),nullable=True, unique=False, default=u'')
+        gps = schema.Column(types.Unicode(255), nullable=True, unique=False, default=u'')
+        mintime = schema.Column(types.Time, default=0)
+        maxtime = schema.Column(types.Time, default=0)
+        active = schema.Column(types.Boolean, default=False)
+
+        def __init__(self, name, lenght, address, gps, mintime, maxtime, active):
             self.name = name
             self.lenght = lenght
+            self.address = address
+            self.gps = gps
             self.mintime = mintime
             self.maxtime = maxtime
-    
-    Base.metadata.create_all(engine)
+            self.active = active
 
-    return TUser, TBase, TLabel, TLabelStatus, TTrack
+    #Base.metadata.create_all(engine)
+
+    return TUser, TBase, TTrack
 
 def fillDB(engine, TBase, date, label, ringtime):
-    
+
     Session = sessionmaker(bind=engine)
     session = Session()
-    
+
     baseData = TBase(date, label, ringtime)
     session.add(baseData)
     session.commit()
@@ -167,28 +191,29 @@ def get_data(engine, TBase, port, baudrate=115200, timeout=1):
             print now.strftime('%Y-%m-%d %H:%M:%S'), 'dT1='+time2str(t1new[0]+t0[0]-t1old)+',', \
             'dT1='+time2str(t1new[0]+t0[0]-t1old)+',', 'Label='+str(c[0])+',', 'T0='+str(t0[0])+',', \
             'T1+='+str(t1new[0])+',', 'T2+='+str(t2new[0])+',', 'dlt='+str(delta)
-            
+
             #send data to base
             fillDB(engine, TBase, now.strftime('%Y-%m-%d %H:%M:%S'), str(c[0]), time2str(t1new[0]+t0[0]-t1old)) # или t2new в зависимости от выбора. выбор дописать
-                   
+
             t1old = t1new[0]+t0[0] # Time1 on last lap
             t2old = t2new[0]+t0[0] # Time2 on last lap
-            
-        
+
+
     ser.close()                 # Close com port
 
 def main():
     '''
     '''
-    
+
     # Options to access the database
     #dbparam = 'mysql://root:ar1m2312@192.168.0.88:3306/_telemetriya?charset=utf8&use_unicode=1'
-    dbparam = 'mysql://root:1234@127.0.0.1:3306/_telemetriya?charset=utf8&use_unicode=1'
+    #dbparam = 'mysql://root:1234@127.0.0.1:3306/_telemetriya?charset=utf8&use_unicode=1'
+    dbparam = 'mysql://root:30v11aiR@178.132.203.168:3306/_telemetriya?charset=utf8&use_unicode=1'
     engine = create_engine(dbparam, echo=False)
-    TUser, TBase, TLabel, TLabelStatus, TTrack = createdb(engine)
+    TUser, TBase, TTrack = initdb(engine)
 
-    print TUser, TBase, TLabel, TLabelStatus, TTrack
-    
+    print TUser, TBase, TTrack
+
     #
     get_data(engine, TBase, 'COM12', 115200, 1)
     #print TBase
@@ -200,4 +225,3 @@ if __name__ == "__main__":
 
 # ''' when run from the console, you need to uncomment the two previous lines and comment out the next line '''
 #main()
-

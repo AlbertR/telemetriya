@@ -205,7 +205,7 @@ class Statistics(db.Model):
         }
 
     id = db.Column(db.Integer, db.Sequence('statistics_id', optional=True), primary_key=True)
-    date = db.Column(db.DateTime, default = 0)
+    date = db.Column(db.DateTime, default = datetime.now())
     label_id = db.Column(db.Integer, default =0)
     user_id = db.Column(db.Integer, default =0)
     ringtime = db.Column(db.Time, default =0)

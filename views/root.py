@@ -878,7 +878,7 @@ def edit_track(track_id):
         query.name = u"Название" if query.name=="" else query.name
         query.length = u"Протяженность" if query.length==0 else query.length
         query.address = u"Адрес" if query.address=="" else query.address
-        query.gps = u"Координаты (через запятую)" if query.gps=="" else query.pgs
+        query.gps = u"Координаты (через запятую)" if query.gps=="" else query.gps
         query.mintime = u"00:00" if query.mintime=="00:00:00" else query.mintime
         query.maxtime = u"00:00" if query.maxtime=="00:00:00" else query.maxtime
         if query.active==1:
