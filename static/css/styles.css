@@ -1,15 +1,18 @@
 html,body{ margin:0; padding:0; width:100%; height:100%; border:0; font-family:Tahoma, Geneva, sans-serif;  }
+header {height: 57px; background-color:#fff; font-size:13px; display:block; padding-right:10px;}
 .header {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; line-height:75px; font-size:36px; }
 .header_info {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; font-size:14px; }
-/* .header_login {height: 74px; width: 100%; background-color:#000; color:#FFFFFF; line-height:75px; font-size:36px; } */
 .center{ width:760px; margin:auto; position:relative;}
 .center_rlabel{ width:760px; margin:auto;}
 .center_info {width: 760px; margin: auto;}
+.centerAl{ text-align:center; }
 .font{ line-height:0;}
+.i { font-style: normal;}
 
 .leftSide{ width:124px; float:left;}
 .middleSide{width:500px; float:left;}
 .rightSide{width:136px; float:right;}
+.rightSideStat{float:right; padding-right:10px; width:320px;}
 
 /* .hide{ display:none; } */
 .fl{ float:left;}
@@ -18,6 +21,7 @@ html,body{ margin:0; padding:0; width:100%; height:100%; border:0; font-family:T
 
 .logo{ display:block; width:99px; height:124px; background:url('../img/osaSprite.png') 0 0 no-repeat; position:relative; text-decoration:none; top: 7px;}
 .logo_info{display:block; width:84px; height:70px; background:url('../img/osaSprite.png') -104px 0 no-repeat; position:relative; text-decoration:none; top: 4px;}
+.logo_stat{margin:5px 0 0 10px; float:left;}
 h1 { margin:0; padding-top:33px; font-size:39px; line-height:0;}
 /* h2 {text-align:left; margin:0; padding: 75px 0px 37px 203px; font-size: 46px; display:block;} */
 /* h2 span{text-align:left; margin:0; padding: 30px 0px 20px 126px; font-size: 24px; display:block; line-height: 27px;} */
@@ -34,8 +38,9 @@ h2 .font{text-align:left; margin:0; padding: 30px 0px 20px 126px; font-size: 24p
 .sideFive{ width:135px; padding-top:13px;}
 .sideFive div{ text-align:center;}
 
-.rightSide{width:136px; float:right;}
+/* .rightSide{width:136px; float:right;} */
 .date{ font-size:22px; padding-top:4px;  }
+.dateStat { font-size:18px;}
 .clock{ font-size:39px; padding-top:7px;}
 .clock span{ font-size:26px;}
 
@@ -77,6 +82,7 @@ h2 .font{text-align:left; margin:0; padding: 30px 0px 20px 126px; font-size: 24p
 .userInfor{padding: 45px 0 0 10px; text-align:bottom; font-size:24px; color: #ff0000;}
 .sectionRight{ float:right; width:50%;}
 .sectionLeft{ float:left; width:50%;}
+.sectionStat{ display:block; width:92px; float:left; padding-top:20px;}
 .inptFld.small{ width:185px; height:60px; background:url('../img/osaSprite.png') -4120px -10px no-repeat; display:block; border:0; margin:0; text-align:left; font-size:30px; outline:none; margin: 6px 0 0 0; padding: 0 0 5px 5px; float: bottom; }
 .inptFldtr{ width:185px; height:60px; background:url('../img/osaSprite.png') -4120px -10px no-repeat; display:block; border:0; margin:0; text-align:left; font-size:30px; outline:none; margin: 6px 0 0 0; padding: 0 0 5px 5px;  }
 .small{text-align:left; color: darkgray; font-size:20px;}
