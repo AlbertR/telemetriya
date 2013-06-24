@@ -16,7 +16,8 @@ from werkzeug import secure_filename
 from werkzeug.local import LocalProxy
 from telemetriya import app, db
 import resources
-from datetime import datetime
+import json
+from datetime import datetime, timedelta
 import re
 import barcode
 from barcode.writer import ImageWriter
@@ -136,6 +137,40 @@ def create_user_method():
 
     return
 
+def minValue(value):
+    '''
+    Поиск минимального числа в массиве и получение его порядкового номера
+    '''
+    array_index = 0
+    j = 0
+    min = value[0]
+    for i in value:
+        if i < min:
+            min = i
+            array_index = j
+        j += 1
+    return array_index
+
+def circleDelta(value):
+    '''
+    Разница времени прохождения текущего круга и предыдущего
+    '''
+    delta = []
+    delta.append('0')
+    for i in range(0,7):
+        try:
+            deltaValue = value[i+1]-value[i]
+            if deltaValue > 0:
+                delta.append("+"+str(deltaValue))
+            else:
+                delta.append(str(deltaValue))
+        except:
+            pass
+    return delta
+
+def bestlap(value):
+    pass
+
 class InlineButtonWidget(object):
     html_params = staticmethod(html_params)
 
@@ -172,7 +207,7 @@ class AdminBaseForm(Form):
     btn_label_controll = InlineButton('', text=u'Управление метками', description='Label controll')
     btn_user_controll = InlineButton('', text=u'Управление пользователями', description='User controll')
     btn_admin_controll = InlineButton('', text=u'Администрирование', description='Admin controll')
-    #name = FileField("Your photo")
+    btn_statistics = InlineButton('', text=u'Статистика', description='Statistics')
 
 class RegisterForm(Form):
 
@@ -340,6 +375,16 @@ class CreatedUser(Form):
     user_tag = TextField("user_tag")
     btn_ok = InlineButton('', text=u'В НАЧАЛО', description=u'В начало')
 
+class StatisticsForm(Form):
+
+    temperature = SelectField(u"test", coerce=int)
+    relative_humidity = SelectField(u'humidity', coerce=int)
+    cloudiness = SelectField(u'cloudiness', coerce=int)
+    #precipitation = SelectField(u'precipitation', coerce=int)
+    tcoating = SelectField(u'coating', coerce=int)
+    ccoverage = SelectField(u'coverage', coerce=int)
+    btn_start_session = InlineButton('', text=u'НАЧАТЬ СЕССИЮ', description=u'Начать сессию')
+    btn_stop = InlineButton('', text=u'ЗАВЕРШИТЬ ТРЕНИРОВКУ', description=u'Завершить тренировку')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -381,13 +426,64 @@ def root():
     есть, то вывести статистику по этой метке.
     '''
     rm = resources.model
+    fill_selects()
     label_id = db.session.query(rm.Label).filter_by(user_id=current_user.id).all()
+    minimumValue = []
+    circDelta = []
     if label_id:
-        print label_id
+        # получить активную тренировку
+        training = db.session.query(rm.Training).filter_by(active=1).first()
+        if not training:
+
+            class Training(object):
+
+                def __init__(self, session):
+                    self.session = session
+                    return
+
+                def json_dump(self):
+                    return dict(sesson=self.session)
+
+            training = Training(u"STP")
+            training_date = datetime.now()
+        else:
+            training_date = training.date
+        print training_date
+        # получить зарегистрированные метки
+        labels = db.session.query(rm.Label).filter(rm.Label.user_id > 0).all()
+        all_data = []
+        userinfo = []
+        best_lap = []
+        for l in labels:
+            ringtimeValue = [] # список времен кругов
+            data_statistics=[] # список данных за неколько (10) кругов
+            stat = db.session.query(rm.Statistics).\
+                   filter(rm.Statistics.user_id==l.user_id, rm.Statistics.date>=training_date).\
+                   order_by(rm.Statistics.id.desc()).limit(8).all() # , rm.Statistics.date>training.date
+            user = db.session.query(rm.User).filter_by(id=l.user_id).first()
+            user_info = db.session.query(rm.UserInfo).filter_by(id=user.user_info).first()
+            userinfo.append(user_info.user_lname+" ["+user_info.user_nickname+"] "+user_info.user_fname)
+            for line in stat:
+                ringtimeValue.insert(0,line.ringtime) # добавить время круга в список
+                converted_data = line.json_dump()
+                m,s = divmod(int(line.ringtime), 60)
+                drob = int((line.ringtime - int(line.ringtime))*10000)
+                time_from_track = "%02d:%02d.%d" % (m,s,drob)
+                line.ringtime = str(time_from_track)
+                data_statistics.insert(0, line.json_dump())
+            if stat != []:
+                all_data.append(data_statistics)
+                minimumValue.insert(0,minValue(ringtimeValue))
+                best = db.session.query(rm.Statistics).\
+                       filter(rm.Statistics.user_id==l.user_id, rm.Statistics.date>=training.date).\
+                       order_by(rm.Statistics.ringtime.asc()).first()
+                best_lap.append(best.ringtime)
+                circDelta.append(circleDelta(ringtimeValue))
+                print best_lap
     else:
         return redirect('/get_label')
 
-    return render_template("users_statistics.html")
+    return render_template("users_statistics.html", training=training, alldata=all_data, minimumValue=minimumValue, circDelta=circDelta, userinfo=userinfo, best_lap=best_lap)
 
 @app.route('/admin', methods=['GET', 'POST'])
 @role_required
@@ -439,6 +535,9 @@ def admin():
         if request.form.getlist('btn_admin_controll'):
             print "form.btn_admin_controll"
             return redirect("/controll_admin")
+        if request.form.getlist('btn_statistics'):
+            print "form.btn_statistics"
+            return redirect("/statistics")
     return render_template('admin.html', form=form, track=name, weather=weather)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -1029,3 +1128,45 @@ def created_user(user_id):
         if request.form.getlist('btn_ok'):
             return redirect("/admin")
     return render_template('created_user.html', form=form, track=name, weather=weather, list=query)
+
+@app.route('/statistics', methods=['GET', 'POST'])
+@role_required
+@login_required
+def statistics():
+    '''
+    Show training statistics
+    '''
+
+    rm = resources.model
+    form = StatisticsForm()
+    fill_selects()
+    form.temperature.choices = g.temperature
+    form.relative_humidity.choices = g.relative_humidity
+    form.cloudiness.choices = g.cloud
+    # form.precipitation.choices = g.precipitation
+    form.tcoating.choices = g.tcoating
+    form.ccoverage.choices = g.coverage
+    weather = get_weather()
+    if weather:
+        track = db.session.query(rm.Track).filter_by(id=weather.track).first()
+    else:
+        track = False
+    if not track:
+        name = u"Трек не выбран"
+    else:
+        name = track.name
+        g.session = weather.session
+    if form.validate_on_submit():
+        rf = request.form
+        if rf.getlist("btn_start_session"):
+            training = db.session.query(rm.Training).filter_by(active=1).first()
+            session_num = training.session
+            db.session.query(rm.Training).filter_by(id=training.id).update({'stop':datetime.now(),'active':0})
+            db.session.commit()
+            training = rm.Training(temperature=rf.getlist('temperature')[0], relative_humidity=rf.getlist('relative_humidity')[0], cloudiness=rf.getlist('cloudiness')[0], precipitation=training.precipitation, tcoating=rf.getlist('tcoating')[0], ccoverage=rf.getlist('ccoverage')[0], start=datetime.now(), stop=u"00:00:00", duration=u"0", track=training.track, session=training.session+1, active='1')
+            db.session.add(training)
+            db.session.commit()
+        if rf.getlist("btn_stop"):
+            db.session.query(rm.Training).filter_by(active=1).update({'active':0})
+            db.session.commit()
+    return render_template('admin_statistics.html', form=form, track=name, weather=weather)

@@ -10,15 +10,27 @@ h2{margin:0; padding:13px 10px 0 10px; font-size:39px; display:block; float:left
         <img class="logo_stat" src="../static/img/osaLogoSmall.png" width="49" height="61" alt="logo">
         <h1>ТЕЛЕМЕТРИЯ</h1>
         <div class="sectionStat">
-            Возд.:&nbsp;+&nbsp;22°C&nbsp;|<br>
-            Солнце
+	    {% if training.temperature %}
+                Возд.:&nbsp;{{g.temperature[training.temperature][1]}}°C&nbsp;|<br>
+                {{ g.cloud[training.cloudiness][1] }}
+	    {% else %}
+                Возд.&nbsp;|<br>
+	    {% endif %}
         </div>
         <div class="sectionStat">
-         Асф.:&nbsp;+&nbsp;36°C&nbsp;|<br>
-         Мокрый
+	    {% if training.tcoating %}
+                Асф.:&nbsp;{{ g.tcoating[training.tcoating][1]}}°C&nbsp;|<br>
+                {{ g.coverage[training.ccoverage][1]}}
+	    {% else %}
+                Асф.:&nbsp;|<br>
+	    {% endif %}
         </div>
         <div class="sectionStat">
-         Влажн.:&nbsp;83%
+	    {% if training.relative_humidity %}
+                Влажн.:&nbsp;{{ g.relative_humidity[training.relative_humidity][1] }}%
+	    {% else %}
+                Влажн.:&nbsp;0%
+	    {% endif %}
         </div>
   	</div>
     <div class="rightSideStat">
@@ -26,7 +38,7 @@ h2{margin:0; padding:13px 10px 0 10px; font-size:39px; display:block; float:left
             <div id="place" class="dateStat">15 МАЙ 2013</div>
             <div id="time">19:29:<i>41</i></div>
         </div>
-	    <h2>сессия: <i>2</i></h2>
+	    <h2>сессия: <i>{{ training.session}}</i></h2>
     </div>
 </header>
 
@@ -35,195 +47,216 @@ h2{margin:0; padding:13px 10px 0 10px; font-size:39px; display:block; float:left
     	<span class="hash">#</span><span class="fio">Ф.И.О.</span><span class="bl">best lap</span>
     </div>
     <div class="mainList">
+        {% for i in range(0,alldata|length) %}
     	<ul>
         	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
+            	<div class="num">{{ i+1 }}</div>
+	            <div class="pilot">{{ userinfo[i]}}:<br>круг: 12</div>
+            	<div class="best">{{ best_lap[i] }}</div>
             </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
+	{% if alldata[i]|length > 8 %}
+		{% set range_loop = 8 %}
+	{% else %}
+		{% set range_loop = alldata[i]|length %}
+        {% endif %}
+	{% for j in range(0, range_loop) %}
+{{ alldata[i][range_loop-1]["session"]}}
+{{ alldata[i][range_loop-2]["session"]}}
+            <li><div class=
+                {% if best_lap[i]==alldata[i][j]["ringtime"] %}
+		     "bestLap"
+		{% else %}
+		     "tme"
+		{% endif %}
+		>{{ alldata[i][j]["ringtime"] }}</div><div class={{ loop.cycle("green","red") }}>
+	        {% if circDelta[i][j]!='0' %}
+		   {{ circDelta[i][j]}}
+		{% endif %} </div></li>
+	{% endfor %}
+        {% if range_loop > 1 %}
+	    {% set range_1 = 7 %}
+	    {% set range_2 = 6 %}
+	    {% if alldata[i][range_loop-1]["session"]==alldata[i][range_loop-2]["session"] %}
+	        <li class="section"><i>{{ alldata[i][range_loop-1]["session"]}}</i></li>
+	    {% else %}
+	        <li class="section"><i>{{ alldata[i][range_loop-2]["session"]}}</i></li>
+	    {% endif %}
+	{% else %}
             <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
+	{% endif %}
         </ul>
-    	<ul>
-        	<li>
-            	<div class="num">2</div>
-	            <div class="pilot">Николай [BenjaminFranklin] Шелестяков<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">3</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li class="section"><i>3</i></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
-    	<ul>
-        	<li>
-            	<div class="num">1</div>
-	            <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div>
-            	<div class="best">00:58:24</div>
-            </li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li>
-            <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-            <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li>
-            <li class="section"><i>2</i></li>
-            <li><div class="tme">- -</div></li>
-            <li class="section"><i>1</i></li>
-            <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li>
-        </ul>
+	{% endfor %}
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">2</div> -->
+	<!--             <div class="pilot">Николай [BenjaminFranklin] Шелестяков<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">3</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li class="section"><i>3</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
+    	<!-- <ul> -->
+        <!-- 	<li> -->
+        <!--     	<div class="num">1</div> -->
+	<!--             <div class="pilot">Антон [Niikas] Саварников:<br>круг: 12</div> -->
+        <!--     	<div class="best">00:58:24</div> -->
+        <!--     </li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">+02:05 </div></li> -->
+        <!--     <li><div class="tme bestLap">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!--     <li><div class="tme bestPrev">01:02:04</div><div class="green">-02:05 </div></li> -->
+        <!--     <li class="section"><i>2</i></li> -->
+        <!--     <li><div class="tme">- -</div></li> -->
+        <!--     <li class="section"><i>1</i></li> -->
+        <!--     <li><div class="tme">01:02:04</div><div class="red">-02:05 </div></li> -->
+        <!-- </ul> -->
     </div>
 </section>
 {% include "foot.html" %}

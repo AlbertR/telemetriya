@@ -7,6 +7,7 @@
 
 import sys, random
 import datetime as dt
+import time
 from sqlalchemy import orm, schema, types, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -75,6 +76,7 @@ def main():
                 ringtime = random.uniform(45.0, 70.0)
                 print "%s %s %.3f %s" % (users[j], labels[j], ringtime, sessions)
                 filldb(engine, TStatistics, users[j], labels[j], ringtime, sessions)
+                time.sleep(10)
             i += 1
 
 #if __name__ == "__main__":

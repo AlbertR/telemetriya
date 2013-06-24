@@ -170,6 +170,7 @@ class Training(db.Model):
     ccoverage = db.Column(db.Integer)
     #track = db.Column(db.Integer)
     track = db.Column(db.Integer, db.ForeignKey('track.id'))
+    date = db.Column(db.Date, default=datetime.now())
     start = db.Column(db.Time, default=datetime.now())
     stop = db.Column(db.Time, default=0)
     duration = db.Column(db.Time, default=0)
@@ -208,7 +209,7 @@ class Statistics(db.Model):
     date = db.Column(db.DateTime, default = datetime.now())
     label_id = db.Column(db.Integer, default =0)
     user_id = db.Column(db.Integer, default =0)
-    ringtime = db.Column(db.Time, default =0)
+    ringtime = db.Column(db.Float, default =0)
     track_id = db.Column(db.Integer)
     session = db.Column(db.Integer)
 
@@ -221,5 +222,8 @@ class Statistics(db.Model):
         self.track_id = track_id
         self.session = session
 
+    def __repr__(self):
+       return '<date: %s, label_id: %s, user_id: %s, ringtime: %s, track_id: %s, sesssion: %s>' % (self.date, self.label_id, self.user_id, self.ringtime, self.track_id, self.session)
+
     def json_dump(self):
-        return dict(label_id=self.label_id, user_id=self.user_id, ringtime=self.ringtime, track_id=self.track_id, session=self.session)
+        return dict(date=self.date, label_id=self.label_id, user_id=self.user_id, ringtime=self.ringtime, track_id=self.track_id, session=self.session)
