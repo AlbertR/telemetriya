@@ -497,7 +497,8 @@ def admin():
     rm = resources.model
     form = AdminBaseForm()
     fill_selects()
-    weather = get_weather()
+    # weather = get_weather()
+    weather = None
     if weather:
         track = db.session.query(rm.Track).filter_by(id=weather.track).first()
         g.session = weather.session
@@ -561,25 +562,25 @@ def register():
         g.session = weather.session
 
     if form.validate_on_submit():
-        if request.form.getlist('agree'):
-            if request.form.getlist('btn_ok'):
-                rf = request.form
-                user = rm.user_datastore.create_user(user_tag='', email=rf.getlist('email')[0], user_phone=rf.getlist('phone')[0])
-                userinfo = rm.UserInfo(user=user, user_lname=rf.getlist('lastname')[0].encode('utf-8'), user_fname=rf.getlist('firstname')[0].encode("utf-8"), user_patronymic=rf.getlist('patronymic')[0].encode("utf-8"), user_nickname=rf.getlist('nickname')[0].encode("utf-8"), user_status=1, user_why=' '.encode("utf-8"))
-                db.session.add(userinfo)
-                db.session.commit()
-                usertag = "u"+generate_tag(user.id)
-                db.session.query(rm.User).filter_by(id=user.id).update({'user_tag':usertag})
-                db.session.commit()
-                '''
-                Generate barcode
-                '''
-                # print usertag.encode('utf-8')
-                ean = barcode.get_barcode('code39', usertag, writer=ImageWriter())
-                filename = ean.save('telemetriya/static/img/code39')
-                return redirect('/created_user/%s' % userinfo.id)
-            elif request.form.getlist('btn_cancel'):
-                return redirect('/admin')
+#         if request.form.getlist('agree'):
+        if request.form.getlist('btn_ok'):
+            rf = request.form
+            user = rm.user_datastore.create_user(user_tag='', email=rf.getlist('email')[0], user_phone=rf.getlist('phone')[0])
+            userinfo = rm.UserInfo(user=user, user_lname=rf.getlist('lastname')[0].encode('utf-8'), user_fname=rf.getlist('firstname')[0].encode("utf-8"), user_patronymic=rf.getlist('patronymic')[0].encode("utf-8"), user_nickname=rf.getlist('nickname')[0].encode("utf-8"), user_status=1, user_why=' '.encode("utf-8"))
+            db.session.add(userinfo)
+            db.session.commit()
+            usertag = "u"+generate_tag(user.id)
+            db.session.query(rm.User).filter_by(id=user.id).update({'user_tag':usertag})
+            db.session.commit()
+            '''
+            Generate barcode
+            '''
+            # print usertag.encode('utf-8')
+            ean = barcode.get_barcode('code39', usertag, writer=ImageWriter())
+            filename = ean.save('telemetriya/static/img/'+str(user.id))
+            return redirect('/created_user/%s' % userinfo.id)
+        elif request.form.getlist('btn_cancel'):
+            return redirect('/admin')
     else:
         if request.form.getlist('btn_cancel'):
             return redirect('/admin')
@@ -1126,7 +1127,7 @@ def created_user(user_id):
     query = db.session.query(rm.UserInfo).filter_by(id=user_id).first()
     if form.validate_on_submit():
         if request.form.getlist('btn_ok'):
-            return redirect("/admin")
+            return redirect("/")
     return render_template('created_user.html', form=form, track=name, weather=weather, list=query)
 
 @app.route('/statistics', methods=['GET', 'POST'])
