@@ -697,7 +697,7 @@ def create_label():
         if request.form.getlist('btn_ok'):
             rf=request.form
             label_id=re.sub(r'(\.)+',r'',rf.getlist('label_id')[0])
-            label = rm.Label(label_id=label_id, status=rf.getlist('status')[0], user_id='')
+            label = rm.Label(label_id=label_id, status=rf.getlist('status')[0], user_id='0')
             db.session.add(label)
             db.session.commit()
             return redirect('/controll_label')
